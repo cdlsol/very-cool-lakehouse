@@ -113,6 +113,7 @@ services:
       volumes:
          - ./data:/opt/spark/work-dir/spark-warehouse/data:rw
          - ./jars/ozone-filesystem-hadoop3-client-1.4.0.jar:/opt/spark/jars/ozone-filesystem-hadoop3-client-1.4.0.jar:ro
+         - ./jars/iceberg-spark-runtime-3.5_2.12-1.7.2.jar:/opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.7.2.jar:ro
       command:
          - "bash"
          - "-c"
@@ -123,6 +124,10 @@ services:
             --conf spark.jars.ivy=/tmp/.ivy2
             --conf spark.hadoop.fs.ofs.impl=org.apache.hadoop.fs.ozone.RootedOzoneFileSystem
             --conf spark.hadoop.ozone.om.address=om:9862
+            --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+            --conf spark.sql.catalog.lakehouse=org.apache.iceberg.spark.SparkCatalog
+            --conf spark.sql.catalog.lakehouse.type=hadoop
+            --conf spark.sql.catalog.lakehouse.warehouse=ofs://om/lakehouse
             && tail -f /dev/null
    spark-worker:
       image: apache/spark:3.5.1
@@ -133,6 +138,7 @@ services:
       volumes:
          - ./data:/opt/spark/work-dir/spark-warehouse/data:rw
          - ./jars/ozone-filesystem-hadoop3-client-1.4.0.jar:/opt/spark/jars/ozone-filesystem-hadoop3-client-1.4.0.jar:ro
+         - ./jars/iceberg-spark-runtime-3.5_2.12-1.7.2.jar:/opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.7.2.jar:ro
       entrypoint:
          - "bash"
          - "-c"
