@@ -13,3 +13,6 @@ def get_current_calmonth() -> tuple[str, str, str, str]:
     day = today.strftime("%d")
 
     return calmonth, year, month, day
+
+def get_lakehouse_dir() -> str:
+    return "ofs://om/lakehouse"
